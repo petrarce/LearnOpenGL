@@ -191,7 +191,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/configuration)
 add_library(STB_IMAGE "src/stb_image.cpp")
 set(LIBS ${LIBS} STB_IMAGE)
 
-add_library(GLAD "src/glad.c")
+#add_library(GLAD "src/glad.c")
 set(LIBS ${LIBS} GLAD)
 
 macro(makeLink src dest target)
