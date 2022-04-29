@@ -15,13 +15,13 @@ void processInput(GLFWwindow *window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-const char *vertexShaderSource = "#version 330 core\n"
+const char vertexShaderSource[] = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "void main()\n"
     "{\n"
     "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
     "}\0";
-const char *fragmentShaderSource = "#version 330 core\n"
+const char fragmentShaderSource[] = "#version 330 core\n"
     "out vec4 FragColor;\n"
     "void main()\n"
     "{\n"
@@ -80,11 +80,7 @@ int main()
 	using namespace glwrapper::core;
 	GLVertexShader vertex;
 	vertex.compile(std::string(vertexShaderSource, sizeof(vertexShaderSource)));
-	if(!vertex.compileStatus())
-	{
-		std::cerr << vertex.compilationLog();
-		return 1;
-	}
+	std::cerr << vertex.compilationLog() << std::endl;
     // fragment shader
 //    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 //    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
@@ -96,13 +92,9 @@ int main()
 //        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 //        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 //    }
-	GLVertexShader fragment;
-	fragment.compile(std::string(vertexShaderSource, sizeof(vertexShaderSource)));
-	if(!fragment.compileStatus())
-	{
-		std::cerr << fragment.compilationLog();
-		return 1;
-	}
+	GLFragmentShader fragment;
+	fragment.compile(std::string(fragmentShaderSource, sizeof(fragmentShaderSource)));
+	std::cerr << fragment.compilationLog() << std::endl;
     // link shaders
 //    unsigned int shaderProgram = glCreateProgram();
 //    glAttachShader(shaderProgram, vertexShader);
@@ -118,6 +110,7 @@ int main()
 //    glDeleteShader(fragmentShader);
 	GLProgram program;
 	program.link(vertex, fragment);
+	std::cerr << program.linkageLog() << std::endl;
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     std::vector<float> vertices = {
