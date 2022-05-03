@@ -3,6 +3,7 @@
 #include <GLVertexArray.hpp>
 #include <GLArrayBuffer.hpp>
 #include <GLObjectBinder.hpp>
+#include <GLWrapperCore>
 
 #include <iostream>
 
