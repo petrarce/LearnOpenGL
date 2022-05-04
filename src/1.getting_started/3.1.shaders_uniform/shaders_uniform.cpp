@@ -159,7 +159,7 @@ int main()
         float greenValue = static_cast<float>(sin(timeValue) / 2.0 + 0.5);
 //        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
 //		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-		prog.setUniform("ourColor", 0.f, greenValue, 0.f, 0.f);
+		prog.setUniform4("ourColor", 0.f, greenValue, 0.f, 0.f);
         // render the triangle
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
