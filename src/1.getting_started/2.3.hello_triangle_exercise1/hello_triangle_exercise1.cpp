@@ -1,8 +1,5 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <GLVertexArray.hpp>
-#include <GLArrayBuffer.hpp>
-#include <GLObjectBinder.hpp>
 #include <GLWrapperCore>
 
 #include <iostream>
@@ -121,12 +118,12 @@ int main()
 	vbo.create(vertices, GL_STATIC_DRAW);
 	vao.createAttribute(
 				GLVertexArray::AttributeSpecification {
-					.location = 0,
 					.components = 3,
-					.type = GL_FLOAT,
+					.location = 0,
 					.normalize = false,
+					.offset = 0,
 					.stride = 3 * sizeof(float),
-					.offset = 0
+					.type = GL_FLOAT,
 				},
 				vbo);
 //    unsigned int VBO, VAO;

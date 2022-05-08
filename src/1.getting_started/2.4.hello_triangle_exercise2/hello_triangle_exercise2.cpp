@@ -1,9 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <GLVertexArray.hpp>
-#include <GLArrayBuffer.hpp>
-#include <GLElementArrayBuffer.hpp>
-
+#include <GLWrapperCore>
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -119,11 +116,12 @@ int main()
 	vbo1.create(firstTriangle, GL_STATIC_DRAW);
 	vbo2.create(secondTriangle, GL_STATIC_DRAW);
 	GLVertexArray::AttributeSpecification spec = {
-		.location = 0,
 		.components = 3,
-		.type = GL_FLOAT,
+		.location = 0,
+		.normalize = false,
+		.offset = 0,
 		.stride = 3 * sizeof(float),
-		.offset = 0
+		.type = GL_FLOAT,
 	};
 	vao1.createAttribute(spec, vbo1);
 	vao2.createAttribute(spec, vbo2);

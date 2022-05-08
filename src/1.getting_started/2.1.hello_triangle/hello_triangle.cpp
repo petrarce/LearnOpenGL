@@ -1,9 +1,6 @@
 #include <glad/glad.h>
 #include <GLObjectBinder.hpp>
-#include <GLVertexArray.hpp>
-#include <GLArrayBuffer.hpp>
-#include <GLShader.hpp>
-#include <GLProgram.hpp>
+#include <GLWrapperCore>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -119,7 +116,7 @@ int main()
          0.0f,  0.5f, 0.0f  // top   
     }; 
 
-    unsigned int VBO, VAO;
+//    unsigned int VBO, VAO;
 //    glGenVertexArrays(1, &VAO);
 //    glGenBuffers(1, &VBO);
 	glwrapper::core::GLVertexArray vao;
@@ -144,12 +141,12 @@ int main()
 //    glBindVertexArray(0); 
 //	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glwrapper::core::GLVertexArray::AttributeSpecification spec {
-				.location = 0,
 				.components = 3,
-				.type = GL_FLOAT,
+				.location = 0,
 				.normalize = false,
+				.offset = 0,
 				.stride = 3 * sizeof(float),
-				.offset = 0
+				.type = GL_FLOAT,
 	};
 	vao.createAttribute(spec, vbo);
 

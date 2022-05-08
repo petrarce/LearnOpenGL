@@ -1,11 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <GLVertexArray.hpp>
-#include <GLElementArrayBuffer.hpp>
-#include <GLArrayBuffer.hpp>
-#include <GLObjectBinder.hpp>
-#include <GLShader.hpp>
-#include <GLProgram.hpp>
+#include <GLWrapperCore>
 #include <iostream>
 #include <vector>
 
@@ -141,12 +136,12 @@ int main()
 	ebo.create(indices, GL_STATIC_DRAW);
 	quadEbo.create(quadIndices, GL_STATIC_DRAW);
 	GLVertexArray::AttributeSpecification spec {
-				.location = 0,
-				.components = 3,
-				.type = GL_FLOAT,
-				.normalize = false,
-				.stride = 3 * sizeof(float),
-				.offset = 0
+		.components = 3,
+		.location = 0,
+		.normalize = false,
+		.offset = 0,
+		.stride = 3 * sizeof(float),
+		.type = GL_FLOAT,
 	};
 	quadVao.createAttribute(spec, vbo, quadEbo);
 	vao.createAttribute(spec, vbo, ebo);
