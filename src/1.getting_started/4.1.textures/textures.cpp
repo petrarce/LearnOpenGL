@@ -1,18 +1,21 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
-
+#include <GLWrapperCore>
 #include <learnopengl/filesystem.h>
 #include <learnopengl/shader_s.h>
 
 #include <iostream>
-
+#include <vector>
+using namespace glwrapper::core;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+
 
 int main()
 {
@@ -90,28 +93,42 @@ int main()
 
     // load and create a texture 
     // -------------------------
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-    // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
+//    unsigned int texture;
+//    glGenTextures(1, &texture);
+//    glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+//    // set the texture wrapping parameters
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//    // set texture filtering parameters
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//    // load image, create texture and generate mipmaps
     int width, height, nrChannels;
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
     unsigned char *data = stbi_load(FileSystem::getPath("resources/textures/container.jpg").c_str(), &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
+	if(!data)
+		throw std::runtime_error("Failed to load data from texture");
+	std::vector<char> vecData(data, &data[width * height * nrChannels + 1]);
+	GLTexture2D texture;
+	texture.setParameter(GLTexture2D::MinFilterValues::MinLinear);
+	texture.setParameter(GLTexture2D::MagFilterValues::MagLinear);
+	texture.setParameter(GLTexture2D::WrapSValues::RepeatS);
+	texture.setParameter(GLTexture2D::WrapTValues::RepeatT);
+	texture.createMutableTexture(vecData, 
+								 GLTexture2D::InternalFormat::RedGreenBlue,
+								 GLTexture2D::DataType::UByte,
+								 GLTexture2D::DataFormat::RGB,
+								 {static_cast<GLuint>(width), static_cast<GLuint>(height)});
+	texture.generateMipMaps();
+//    if (data)
+//    {
+//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+//        glGenerateMipmap(GL_TEXTURE_2D);
+//    }
+//    else
+//    {
+//        std::cout << "Failed to load texture" << std::endl;
+//    }
     stbi_image_free(data);
 
 
@@ -129,8 +146,9 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // bind Texture
-        glBindTexture(GL_TEXTURE_2D, texture);
+//        glBindTexture(GL_TEXTURE_2D, texture);
 
+		GlObjectBinder bind(texture);
         // render container
         ourShader.use();
         glBindVertexArray(VAO);
@@ -150,7 +168,7 @@ int main()
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
-    glfwTerminate();
+//    glfwTerminate();
     return 0;
 }
 
