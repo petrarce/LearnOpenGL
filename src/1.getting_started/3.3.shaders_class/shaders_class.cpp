@@ -90,7 +90,7 @@ int main()
 		.type = GL_FLOAT
 	};
 	auto colorAttrib = verticesAttribute;
-	colorAttrib.offset = (void*) (3 * sizeof(float));
+	colorAttrib.offset = (3 * sizeof(float));
 	colorAttrib.location = 1;
 //    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 //    glEnableVertexAttribArray(0);
