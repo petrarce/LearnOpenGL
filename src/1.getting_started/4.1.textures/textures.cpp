@@ -110,15 +110,15 @@ int main()
 		throw std::runtime_error("Failed to load data from texture");
 	std::vector<char> vecData(data, &data[width * height * nrChannels + 1]);
 	GLTexture2D texture;
-	texture.setParameter(GLTexture2D::MinFilterValues::MinLinear);
-	texture.setParameter(GLTexture2D::MagFilterValues::MagLinear);
-	texture.setParameter(GLTexture2D::WrapSValues::RepeatS);
-	texture.setParameter(GLTexture2D::WrapTValues::RepeatT);
-	texture.createMutableTexture(vecData, 
-								 GLTexture2D::InternalFormat::RedGreenBlue,
-								 GLTexture2D::DataType::UByte,
-								 GLTexture2D::DataFormat::RGB,
-								 {static_cast<GLuint>(width), static_cast<GLuint>(height)});
+	texture.setParameter(GLTexture2D::ValueMinFilter::MinLinear);
+	texture.setParameter(GLTexture2D::ValueMagFilter::MagLinear);
+	texture.setParameter(GLTexture2D::ValueWrapS::RepeatS);
+	texture.setParameter(GLTexture2D::ValueWrapT::RepeatT);
+	texture.create<char, 2>(vecData, 0,
+		GLTexture2D::InternalFormat::Rgb,
+		GLTexture2D::DataFormat::DRgb,
+		GLTexture2D::DataType::UByte,
+		{static_cast<GLuint>(width), static_cast<GLuint>(height)});
 	texture.generateMipMaps();
 //    if (data)
 //    {
