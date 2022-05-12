@@ -105,9 +105,12 @@ int main()
 //    // load image, create texture and generate mipmaps
     int width, height, nrChannels;
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    unsigned char *data = stbi_load(FileSystem::getPath("resources/textures/container.jpg").c_str(), &width, &height, &nrChannels, 0);
+	auto textPath = FileSystem::getPath("resources/textures/container.jpg");
+    unsigned char *data = stbi_load(textPath.c_str(), &width, &height, &nrChannels, 0);
 	if(!data)
 		throw std::runtime_error("Failed to load data from texture");
+	else
+		std::cout << "Loaded texture sucessfully:" << textPath << std::endl;
 	std::vector<char> vecData(data, &data[width * height * nrChannels + 1]);
 	GLTexture2D texture;
 	texture.setParameter(GLTexture2D::ValueMinFilter::MinLinear);

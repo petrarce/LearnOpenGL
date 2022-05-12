@@ -8,8 +8,11 @@
 
 #include <learnopengl/filesystem.h>
 #include <learnopengl/shader_s.h>
+#include <GLWrapperCore>
 
 #include <iostream>
+
+using namespace glwrapper::core;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -42,6 +45,7 @@ int main()
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSwapInterval(1);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -53,7 +57,13 @@ int main()
 
     // build and compile our shader zprogram
     // ------------------------------------
-    Shader ourShader("5.1.transform.vs", "5.1.transform.fs");
+//    Shader ourShader("5.1.transform.vs", "5.1.transform.fs");
+	GLProgram prog;
+	GLVertexShader vs;
+	GLFragmentShader fs;
+	vs.compileFile("5.1.transform.vs");
+	fs.compileFile("5.1.transform.fs");
+	prog.link(vs, fs);
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -142,9 +152,9 @@ int main()
 
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
-    ourShader.use(); 
-    ourShader.setInt("texture1", 0);
-    ourShader.setInt("texture2", 1);
+    prog.use(); 
+    prog.setUniform1("texture1", 0);
+    prog.setUniform1("texture2", 1);
 
 
     // render loop
@@ -167,14 +177,14 @@ int main()
         glBindTexture(GL_TEXTURE_2D, texture2);
 
         // create transformations
-        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-
+		Eigen::Translation3f translation = {0.5f, -0.5f, 1.0f}; // make sure to initialize matrix to identity matrix first
+		Eigen::AngleAxisf rotation((float)glfwGetTime(), Eigen::Vector3f{0, 0, 1.f});//glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+		Eigen::Matrix4f transform = (rotation * translation).matrix();
         // get matrix's uniform location and set matrix
-        ourShader.use();
-        unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+        prog.use();
+//        unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+//        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+		prog.setMatrix("transform", transform);
 
         // render container
         glBindVertexArray(VAO);
