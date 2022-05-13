@@ -10,6 +10,8 @@
 #include <learnopengl/shader_m.h>
 
 #include <iostream>
+#include <GLGeometryObjects>
+#include <GLWrapperCore>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -35,7 +37,7 @@ float fov   =  45.0f;
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
-
+object::camera::GLCameraController controller;
 int main()
 {
     // glfw: initialize and configure
@@ -80,8 +82,10 @@ int main()
 
     // build and compile our shader zprogram
     // ------------------------------------
-    Shader ourShader("7.3.camera.vs", "7.3.camera.fs");
-
+//    Shader ourShader("7.3.camera.vs", "7.3.camera.fs");
+	glwrapper::core::GLShaderProgram ourShader;
+	ourShader.prepareFiles("7.3.camera.vs", "7.3.camera.fs");
+	
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
@@ -211,8 +215,8 @@ int main()
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
     ourShader.use();
-    ourShader.setInt("texture1", 0);
-    ourShader.setInt("texture2", 1);
+    ourShader.setUniform1("texture1", 0);
+    ourShader.setUniform1("texture2", 1);
 
 
     // render loop
@@ -245,14 +249,21 @@ int main()
 
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        ourShader.setMat4("projection", projection);
+		Eigen::Matrix4f pmat(&projection[0][0]);
+        ourShader.setMatrix("projection", pmat);
 
         // camera/view transformation
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-        ourShader.setMat4("view", view);
+		Eigen::Matrix4f vmat(&view[0][0]);
+		std::cout << controller.camera.toViewTransform() << std::endl;
+		std::cout << controller.camera.transform() << std::endl << std::endl;
+        ourShader.setMatrix("view", controller.camera.toViewTransform());
 
         // render boxes
         glBindVertexArray(VAO);
+		ourShader.setMatrix("model", Eigen::Matrix4f(Eigen::Matrix4f::Identity()));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		
         for (unsigned int i = 0; i < 10; i++)
         {
             // calculate the model matrix for each object and pass it to shader before drawing
@@ -260,7 +271,8 @@ int main()
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            ourShader.setMat4("model", model);
+			Eigen::Matrix4f mmat(&model[0][0]);
+            ourShader.setMatrix("model", mmat);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
@@ -328,33 +340,17 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     lastX = xpos;
     lastY = ypos;
 
-    float sensitivity = 0.1f; // change this value to your liking
+    float sensitivity = 0.001f; // change this value to your liking
     xoffset *= sensitivity;
     yoffset *= sensitivity;
-
-    yaw += xoffset;
-    pitch += yoffset;
-
-    // make sure that when pitch is out of bounds, screen doesn't get flipped
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
-
-    glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(front);
+	
+	controller.cameraRotate(yoffset, xoffset);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    fov -= (float)yoffset;
-    if (fov < 1.0f)
-        fov = 1.0f;
-    if (fov > 45.0f)
-        fov = 45.0f;
+    controller.camera.distance -= (float)yoffset;
+    
 }
