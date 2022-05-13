@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
+#include <GLWrapperCore>
+#include <GLGeometryObjects>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -10,7 +12,8 @@
 #include <learnopengl/shader_m.h>
 
 #include <iostream>
-
+using namespace glwrapper::core;
+using namespace object::camera;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -20,6 +23,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 // camera
 glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
+glm::vec3 lastCamPos = cameraPos;
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
@@ -66,7 +70,9 @@ int main()
 
     // build and compile our shader zprogram
     // ------------------------------------
-    Shader ourShader("7.2.camera.vs", "7.2.camera.fs");
+//    Shader ourShader("7.2.camera.vs", "7.2.camera.fs");
+	GLShaderProgram prog;
+	prog.prepareFiles("7.2.camera.vs", "7.2.camera.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -196,15 +202,16 @@ int main()
 
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
-    ourShader.use();
-    ourShader.setInt("texture1", 0);
-    ourShader.setInt("texture2", 1);
+	prog.use();
+	prog.setUniform1("texture1", 0);
+	prog.setUniform1("texture2", 1);
 
     // pass projection matrix to shader (as projection matrix rarely changes there's no need to do this per frame)
     // -----------------------------------------------------------------------------------------------------------
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    ourShader.setMat4("projection", projection);
-
+	Eigen::Matrix4f pmat(&projection[0][0]);
+	prog.setMatrix("projection", pmat);
+	GLCameraController camera;
 
     // render loop
     // -----------
@@ -215,6 +222,7 @@ int main()
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+		lastCamPos = cameraPos;
 
         // input
         // -----
@@ -232,11 +240,16 @@ int main()
         glBindTexture(GL_TEXTURE_2D, texture2);
 
         // activate shader
-        ourShader.use();
+		prog.use();
 
         // camera/view transformation
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-        ourShader.setMat4("view", view);
+		Eigen::Matrix4f vmat(&view[0][0]);
+		glm::vec3 offset = cameraPos - lastCamPos;
+		Eigen::Vector3f eoffset(&offset[0]);
+		std::cout << "Cmaera offset on input" << eoffset << std::endl;
+		camera.cameraMove(eoffset);
+		prog.setMatrix("view", camera.camera.toViewTransform());
 
         // render boxes
         glBindVertexArray(VAO);
@@ -247,7 +260,8 @@ int main()
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            ourShader.setMat4("model", model);
+			Eigen::Matrix4f mmat(&model[0][0]);
+			prog.setMatrix("model", mmat);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }

@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+#include <GLGeometryObjects>
+#include <GLWrapperCore>
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -57,8 +59,9 @@ int main()
 
     // build and compile our shader zprogram
     // ------------------------------------
-    Shader ourShader("7.1.camera.vs", "7.1.camera.fs");
-
+//    Shader ourShader("7.1.camera.vs", "7.1.camera.fs");
+	glwrapper::core::GLShaderProgram prog;
+	prog.prepareFiles("7.1.camera.vs", "7.1.camera.fs");
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
@@ -150,7 +153,8 @@ int main()
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-    unsigned char *data = stbi_load(FileSystem::getPath("resources/textures/container.jpg").c_str(), &width, &height, &nrChannels, 0);
+	std::string texturePath = FileSystem::getPath("resources/textures/container.jpg");
+	unsigned char *data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -158,7 +162,7 @@ int main()
     }
     else
     {
-        std::cout << "Failed to load texture" << std::endl;
+		std::cout << "Failed to load texture: " << texturePath << std::endl;
     }
     stbi_image_free(data);
     // texture 2
@@ -187,16 +191,22 @@ int main()
 
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
-    ourShader.use();
-    ourShader.setInt("texture1", 0);
-    ourShader.setInt("texture2", 1);
+	prog.use();
+	prog.setUniform1("texture1", static_cast<int>(0));
+	prog.setUniform1("texture2", static_cast<int>(1));
 
     // pass projection matrix to shader (as projection matrix rarely changes there's no need to do this per frame)
     // -----------------------------------------------------------------------------------------------------------
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    ourShader.setMat4("projection", projection); 
+	glm::mat4 p = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	Eigen::Matrix4f projectionE(&p[0][0]);
+
+	prog.setMatrix("projection", projectionE);
 
 
+	object::camera::GLCameraController cam;
+	cam.camera.distance = 10;
+	cam.camera.pivot = Eigen::Vector3f(0, 0, 0);
+	cam.camera.angleX = 0;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -217,15 +227,21 @@ int main()
         glBindTexture(GL_TEXTURE_2D, texture2);
 
         // activate shader
-        ourShader.use();
+		prog.use();
 
         // camera/view transformation
-        glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        float radius = 10.0f;
-        float camX = static_cast<float>(sin(glfwGetTime()) * radius);
-        float camZ = static_cast<float>(cos(glfwGetTime()) * radius);
-        view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        ourShader.setMat4("view", view);
+		glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+		float radius = 50.0f;
+		float camX = static_cast<float>(sin(glfwGetTime()) * radius);
+		float camZ = static_cast<float>(cos(glfwGetTime()) * radius);
+		view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		Eigen::Matrix4f originalView(&view[0][0]);
+		cam.cameraRotate(0, glfwGetTime() / 1000.f);
+		std::cout << "View transform:\n" << cam.camera.toViewTransform() << std::endl;
+		std::cout << "Original View:\n" << originalView << std::endl;
+
+
+		prog.setMatrix("view", cam.camera.toViewTransform());
 
         // render boxes
         glBindVertexArray(VAO);
@@ -236,7 +252,8 @@ int main()
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            ourShader.setMat4("model", model);
+			Eigen::Matrix4f modelE(&model[0][0]);
+			prog.setMatrix("model", modelE);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
