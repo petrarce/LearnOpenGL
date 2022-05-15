@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-using namespace glwrapper::core;
+using namespace dream::glwrapper;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 

@@ -109,7 +109,7 @@ int main()
         0.9f, -0.5f, 0.0f,  // right
         0.45f, 0.5f, 0.0f   // top 
     };
-	using namespace glwrapper::core;
+	using namespace dream::glwrapper;
 	GLVertexArray vao1("GLVertexArray1"), vao2("GLVertexArray2");
 	GLArrayBuffer vbo1("GLVertexArray1"), vbo2("GLVertexArray2");
 

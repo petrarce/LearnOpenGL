@@ -37,7 +37,7 @@ float fov   =  45.0f;
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
-object::camera::GLCameraController controller;
+dream::geometry::GLCameraController controller;
 int main()
 {
     // glfw: initialize and configure
@@ -83,7 +83,7 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
 //    Shader ourShader("7.3.camera.vs", "7.3.camera.fs");
-	glwrapper::core::GLShaderProgram ourShader;
+	dream::glwrapper::GLShaderProgram ourShader;
 	ourShader.prepareFiles("7.3.camera.vs", "7.3.camera.fs");
 	
     // set up vertex data (and buffer(s)) and configure vertex attributes

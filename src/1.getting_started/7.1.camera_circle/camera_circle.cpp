@@ -60,7 +60,7 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
 //    Shader ourShader("7.1.camera.vs", "7.1.camera.fs");
-	glwrapper::core::GLShaderProgram prog;
+	dream::glwrapper::GLShaderProgram prog;
 	prog.prepareFiles("7.1.camera.vs", "7.1.camera.fs");
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -203,7 +203,7 @@ int main()
 	prog.setMatrix("projection", projectionE);
 
 
-	object::camera::GLCameraController cam;
+	dream::geometry::GLCameraController cam;
 	cam.camera.distance = 10;
 	cam.camera.pivot = Eigen::Vector3f(0, 0, 0);
 	cam.camera.angleX = 0;

@@ -74,7 +74,7 @@ int main()
 //        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 //        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 //    }
-	using namespace glwrapper::core;
+	using namespace dream::glwrapper;
 	GLVertexShader vertex;
 	vertex.compile(std::string(vertexShaderSource, sizeof(vertexShaderSource)));
 	std::cerr << vertex.compilationLog() << std::endl;
@@ -119,8 +119,8 @@ int main()
 //    unsigned int VBO, VAO;
 //    glGenVertexArrays(1, &VAO);
 //    glGenBuffers(1, &VBO);
-	glwrapper::core::GLVertexArray vao;
-	glwrapper::core::GLArrayBuffer vbo;
+	dream::glwrapper::GLVertexArray vao;
+	dream::glwrapper::GLArrayBuffer vbo;
 	
     // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 
@@ -140,7 +140,7 @@ int main()
 //    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
 //    glBindVertexArray(0); 
 //	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glwrapper::core::GLVertexArray::AttributeSpecification spec {
+	dream::glwrapper::GLVertexArray::AttributeSpecification spec {
 				.components = 3,
 				.location = 0,
 				.normalize = false,
@@ -173,7 +173,7 @@ int main()
 //        glUseProgram(shaderProgram);
 //        glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 		program.use();
-		glwrapper::core::GlObjectBinder bind(vao);
+		dream::glwrapper::GlObjectBinder bind(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         // glBindVertexArray(0); // no need to unbind it every time 
  

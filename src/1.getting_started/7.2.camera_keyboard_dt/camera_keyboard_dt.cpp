@@ -12,8 +12,8 @@
 #include <learnopengl/shader_m.h>
 
 #include <iostream>
-using namespace glwrapper::core;
-using namespace object::camera;
+using namespace dream::glwrapper;
+using namespace dream::geometry;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 

@@ -112,7 +112,7 @@ int main()
          0.45f, 0.5f, 0.0f   // top 
     }; 
 
-	using namespace glwrapper::core;
+	using namespace dream::glwrapper;
 	GLArrayBuffer vbo;
 	GLVertexArray vao;
 	vbo.create(vertices, GL_STATIC_DRAW);

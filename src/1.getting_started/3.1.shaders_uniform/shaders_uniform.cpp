@@ -63,7 +63,7 @@ int main()
     // build and compile our shader program
     // ------------------------------------
     // vertex shader
-	using namespace glwrapper::core;
+	using namespace dream::glwrapper;
 	GLVertexShader vs;
 	GLFragmentShader fs;
 	GLProgram prog;

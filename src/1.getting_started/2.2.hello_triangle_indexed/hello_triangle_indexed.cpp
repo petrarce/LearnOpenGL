@@ -73,7 +73,7 @@ int main()
 //        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 //        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 //    }
-	using namespace glwrapper::core;
+	using namespace dream::glwrapper;
 	GLVertexShader vertexShader;
 	vertexShader.compile(std::string(vertexShaderSource, sizeof(vertexShaderSource)));
 	std::cerr << vertexShader.compilationLog() << std::endl;
@@ -125,7 +125,7 @@ int main()
 //    glGenVertexArrays(1, &VAO);
 //    glGenBuffers(1, &VBO);
 //    glGenBuffers(1, &EBO);
-	using namespace glwrapper::core;
+	using namespace dream::glwrapper;
 	GLElementArrayBuffer ebo;
 	GLElementArrayBuffer quadEbo;
 	GLArrayBuffer vbo;

@@ -88,7 +88,7 @@ int main()
 //    glAttachShader(shaderProgramYellow, vertexShader);
 //    glAttachShader(shaderProgramYellow, fragmentShaderYellow);
 //    glLinkProgram(shaderProgramYellow);
-	using namespace glwrapper::core;
+	using namespace dream::glwrapper;
 	GLVertexShader vs;
 	GLFragmentShader fsYellow, fsOrange;
 	GLProgram progYellow, progOrange;
