@@ -210,7 +210,7 @@ int main()
     // -----------------------------------------------------------------------------------------------------------
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	Eigen::Matrix4f pmat(&projection[0][0]);
-	prog.setMatrix("projection", pmat);
+	prog.setUniform("projection", pmat);
 	GLCameraController camera;
 
     // render loop
@@ -249,7 +249,7 @@ int main()
 		Eigen::Vector3f eoffset(&offset[0]);
 		std::cout << "Cmaera offset on input" << eoffset << std::endl;
 		camera.cameraMove(eoffset);
-		prog.setMatrix("view", camera.camera.toViewTransform());
+		prog.setUniform("view", camera.camera.toViewTransform());
 
         // render boxes
         glBindVertexArray(VAO);
@@ -261,7 +261,7 @@ int main()
             float angle = 20.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			Eigen::Matrix4f mmat(&model[0][0]);
-			prog.setMatrix("model", mmat);
+			prog.setUniform("model", mmat);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }

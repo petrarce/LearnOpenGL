@@ -200,7 +200,7 @@ int main()
 	glm::mat4 p = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	Eigen::Matrix4f projectionE(&p[0][0]);
 
-	prog.setMatrix("projection", projectionE);
+	prog.setUniform("projection", projectionE);
 
 
 	dream::geometry::GLCameraController cam;
@@ -241,7 +241,7 @@ int main()
 		std::cout << "Original View:\n" << originalView << std::endl;
 
 
-		prog.setMatrix("view", cam.camera.toViewTransform());
+		prog.setUniform("view", cam.camera.toViewTransform());
 
         // render boxes
         glBindVertexArray(VAO);
@@ -253,7 +253,7 @@ int main()
             float angle = 20.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			Eigen::Matrix4f modelE(&model[0][0]);
-			prog.setMatrix("model", modelE);
+			prog.setUniform("model", modelE);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }

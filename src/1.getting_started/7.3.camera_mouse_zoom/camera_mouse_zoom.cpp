@@ -250,18 +250,18 @@ int main()
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		Eigen::Matrix4f pmat(&projection[0][0]);
-        ourShader.setMatrix("projection", pmat);
+		ourShader.setUniform("projection", pmat);
 
         // camera/view transformation
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 		Eigen::Matrix4f vmat(&view[0][0]);
 		std::cout << controller.camera.toViewTransform() << std::endl;
 		std::cout << controller.camera.transform() << std::endl << std::endl;
-        ourShader.setMatrix("view", controller.camera.toViewTransform());
+		ourShader.setUniform("view", controller.camera.toViewTransform());
 
         // render boxes
         glBindVertexArray(VAO);
-		ourShader.setMatrix("model", Eigen::Matrix4f(Eigen::Matrix4f::Identity()));
+		ourShader.setUniform("model", Eigen::Matrix4f(Eigen::Matrix4f::Identity()));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		
         for (unsigned int i = 0; i < 10; i++)
@@ -272,7 +272,7 @@ int main()
             float angle = 20.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			Eigen::Matrix4f mmat(&model[0][0]);
-            ourShader.setMatrix("model", mmat);
+			ourShader.setUniform("model", mmat);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }

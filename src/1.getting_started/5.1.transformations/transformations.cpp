@@ -184,7 +184,7 @@ int main()
         prog.use();
 //        unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
 //        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-		prog.setMatrix("transform", transform);
+		prog.setUniform("transform", transform);
 
         // render container
         glBindVertexArray(VAO);
