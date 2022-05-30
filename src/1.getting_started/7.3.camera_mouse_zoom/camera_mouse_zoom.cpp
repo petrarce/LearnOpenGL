@@ -83,7 +83,7 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
 //    Shader ourShader("7.3.camera.vs", "7.3.camera.fs");
-	dream::glwrapper::GLShaderProgram ourShader;
+	dream::glwrapper::GLProgram ourShader;
 	ourShader.prepareFiles("7.3.camera.vs", "7.3.camera.fs");
 	
     // set up vertex data (and buffer(s)) and configure vertex attributes

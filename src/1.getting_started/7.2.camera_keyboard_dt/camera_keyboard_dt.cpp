@@ -71,7 +71,7 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
 //    Shader ourShader("7.2.camera.vs", "7.2.camera.fs");
-	GLShaderProgram prog;
+	GLProgram prog;
 	prog.prepareFiles("7.2.camera.vs", "7.2.camera.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes

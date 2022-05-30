@@ -60,7 +60,7 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
 //    Shader ourShader("7.1.camera.vs", "7.1.camera.fs");
-	dream::glwrapper::GLShaderProgram prog;
+	dream::glwrapper::GLProgram prog;
 	prog.prepareFiles("7.1.camera.vs", "7.1.camera.fs");
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
