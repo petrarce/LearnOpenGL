@@ -118,8 +118,8 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // render the triangle
-		prog.use();
-		GlObjectBinder bind(vao);
+		dream::glwrapper::GLObjectBinder bindProgram(prog);
+		GLObjectBinder bind(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

@@ -150,14 +150,14 @@ int main()
 
         // now when we draw the triangle we first use the vertex and orange fragment shader from the first program
 //        glUseProgram(shaderProgramOrange);
-		progOrange.use();
+		dream::glwrapper::GLObjectBinder bindProgramO(progOrange);
         // draw the first triangle using the data from our first VAO
         glBindVertexArray(VAOs[0]);
         glDrawArrays(GL_TRIANGLES, 0, 3);	// this call should output an orange triangle
         // then we draw the second triangle using the data from the second VAO
         // when we draw the second triangle we want to use a different shader program so we switch to the shader program with our yellow fragment shader.
 //        glUseProgram(shaderProgramYellow);
-		progYellow.use();
+		dream::glwrapper::GLObjectBinder bindProgramY(progYellow);
         glBindVertexArray(VAOs[1]);
         glDrawArrays(GL_TRIANGLES, 0, 3);	// this call should output a yellow triangle
 

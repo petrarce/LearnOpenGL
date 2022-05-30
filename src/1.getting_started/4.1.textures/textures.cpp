@@ -151,7 +151,7 @@ int main()
         // bind Texture
 //        glBindTexture(GL_TEXTURE_2D, texture);
 
-		GlObjectBinder bind(texture);
+		GLObjectBinder bind(texture);
         // render container
         ourShader.use();
         glBindVertexArray(VAO);

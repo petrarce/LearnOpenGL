@@ -153,13 +153,13 @@ int main()
 
         // be sure to activate the shader before any calls to glUniform
 //        glUseProgram(shaderProgram);
-		prog.use();
+		dream::glwrapper::GLObjectBinder bindProgram(prog);
         // update shader uniform
         double  timeValue = glfwGetTime();
         float greenValue = static_cast<float>(sin(timeValue) / 2.0 + 0.5);
 //        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
 //		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-		prog.setUniform4("ourColor", 0.f, greenValue, 0.f, 0.f);
+		prog.setUniform("ourColor", 0.f, greenValue, 0.f, 0.f);
         // render the triangle
         glDrawArrays(GL_TRIANGLES, 0, 3);
 

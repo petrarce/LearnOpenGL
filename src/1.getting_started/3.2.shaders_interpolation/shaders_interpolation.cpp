@@ -108,7 +108,7 @@ int main()
     // glBindVertexArray(0);
 
     // as we only have a single shader, we could also just activate our shader once beforehand if we want to 
-	prog.use();
+	dream::glwrapper::GLObjectBinder bindProgram(prog);
 
     // render loop
     // -----------

@@ -167,11 +167,11 @@ int main()
         glUseProgram(shaderProgram);
         // draw first triangle using the data from the first VAO
 //        glBindVertexArray(VAOs[0]);
-		GlObjectBinder bind1(vao1);
+		GLObjectBinder bind1(vao1);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
         // then we draw the second triangle using the data from the second VAO
 //        glBindVertexArray(VAOs[1]);
-		GlObjectBinder bind2(vao2);
+		GLObjectBinder bind2(vao2);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
  
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

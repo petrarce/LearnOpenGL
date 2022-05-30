@@ -152,9 +152,9 @@ int main()
 
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
-    prog.use(); 
-    prog.setUniform1("texture1", 0);
-    prog.setUniform1("texture2", 1);
+    dream::glwrapper::GLObjectBinder bindProgram(prog); 
+	prog.setUniform("texture1", 0);
+	prog.setUniform("texture2", 1);
 
 
     // render loop
@@ -181,7 +181,7 @@ int main()
 		Eigen::AngleAxisf rotation((float)glfwGetTime(), Eigen::Vector3f{0, 0, 1.f});//glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
 		Eigen::Matrix4f transform = (rotation * translation).matrix();
         // get matrix's uniform location and set matrix
-        prog.use();
+        dream::glwrapper::GLObjectBinder bindProgram(prog);
 //        unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
 //        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 		prog.setUniform("transform", transform);

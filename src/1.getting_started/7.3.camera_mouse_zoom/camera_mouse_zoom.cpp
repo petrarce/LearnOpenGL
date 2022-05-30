@@ -214,9 +214,9 @@ int main()
 
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
-    ourShader.use();
-    ourShader.setUniform1("texture1", 0);
-    ourShader.setUniform1("texture2", 1);
+    dream::glwrapper::GLObjectBinder bindProgram(ourShader);
+	ourShader.setUniform("texture1", 0);
+	ourShader.setUniform("texture2", 1);
 
 
     // render loop
@@ -245,7 +245,7 @@ int main()
         glBindTexture(GL_TEXTURE_2D, texture2);
 
         // activate shader
-        ourShader.use();
+        dream::glwrapper::GLObjectBinder bindProgram(ourShader);
 
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);

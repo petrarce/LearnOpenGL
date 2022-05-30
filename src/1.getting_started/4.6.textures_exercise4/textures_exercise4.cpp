@@ -228,17 +228,17 @@ int main()
 //        glBindTexture(GL_TEXTURE_2D, texture2);
 		GLTextureUnit tu1(GL_TEXTURE0);
 		GLTextureUnit tu2(GL_TEXTURE1);
-		GlObjectBinder bindTu1(tu1);
-		GlObjectBinder bintTx1(texture1);
-		GlObjectBinder bindTu2(tu2);
-		GlObjectBinder bintTx2(texture2);
+		GLObjectBinder bindTu1(tu1);
+		GLObjectBinder bintTx1(texture1);
+		GLObjectBinder bindTu2(tu2);
+		GLObjectBinder bintTx2(texture2);
 		// render container
         // set the texture mix value in the shader
         ourShader.setFloat("mixValue", mixValue);
 
         // render container
         ourShader.use();
-		GlObjectBinder bintVAO(vertexArray);
+		GLObjectBinder bintVAO(vertexArray);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

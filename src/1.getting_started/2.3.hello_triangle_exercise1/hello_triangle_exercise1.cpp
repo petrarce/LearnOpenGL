@@ -165,7 +165,7 @@ int main()
         // draw our first triangle
         glUseProgram(shaderProgram);
 //        glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-		GlObjectBinder bind(vao);
+		GLObjectBinder bind(vao);
 		glDrawArrays(GL_TRIANGLES, 0, 6); // set the count to 6 since we're drawing 6 vertices now (2 triangles); not 3!
         // glBindVertexArray(0); // no need to unbind it every time 
  
